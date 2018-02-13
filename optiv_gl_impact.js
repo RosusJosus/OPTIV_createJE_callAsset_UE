@@ -111,15 +111,8 @@ define(['N/record', 'N/task', 'N/log', 'N/format', 'N/search', 'N/runtime'], fun
 										qty = Number(o_rec.getSublistValue('item', 'quantity', itm_i));
 										revLine = Number(o_so.getSublistValue('item', 'rate', so_i)) * qty;
 										costLine = Number(o_so.getSublistValue('item', 'custcolunitcost', so_i)) * qty;
-										log.debug('rate/rev + costline/unit cost', revLine + ' ' + costLine);
 										grossProfit = revLine - costLine;
-										if(isNegative(num)){
-											gpPct = (revLine!=0)?((grossProfit/revLine)*100):0;
-											goPct = -goPct;
-										}
-										else{
-											gpPct = (revLine!=0)?((grossProfit/revLine)*100):0;
-										}
+										gpPct = (revLine!=0)?((grossProfit/revLine)*100):0;
 										log.debug("AR vals", revLine + ' ' + costLine + ' ' + grossProfit);
 										a_ARLineObj.push({
 											item: o_rec.getSublistValue('item', 'item', itm_i),
@@ -731,12 +724,7 @@ define(['N/record', 'N/task', 'N/log', 'N/format', 'N/search', 'N/runtime'], fun
 				' Contribution Decimal Number: '+d_rep1Cont);
 
 		for(var i = 0; i < a_LineObj.length; i++){
-			if(isNegative(a_LineObj[i].amount)){
-				var rep1_amount = to2DecNegative(a_LineObj[i].amount * d_rep1Cont);
-			}
-			else{
-				var rep1_amount = to2Decimal(a_LineObj[i].amount * d_rep1Cont);
-			}
+			var rep1_amount = to2Decimal(a_LineObj[i].amount * d_rep1Cont);
 			log.debug('Line '+(i+1)+' Fields', 'Item: ' + a_LineObj[i].item + ' Class: '+a_LineObj[i].classID 
 					+ ' Line Amount: '+a_LineObj[i].amount + ' AR JE: '+isARJE+ ' Rep 1 % Amount: '+rep1_amount);
 			var rep1_cost = 0, rep1_gp = 0;
@@ -789,13 +777,7 @@ define(['N/record', 'N/task', 'N/log', 'N/format', 'N/search', 'N/runtime'], fun
 
 			
 			if(hasRep2){
-
-				if(isNegative(a_LineObj[i].amount)){
-					var rep2_amount = to2DecNegative(a_LineObj[i].amount * d_rep2Cont);
-				}
-				else{
-					var rep2_amount = to2Decimal(a_LineObj[i].amount * d_rep2Cont);
-				}
+				var rep2_amount = to2Decimal(a_LineObj[i].amount * d_rep2Cont);
 					
 				log.debug('Rep 2 Info', 'Department: ' + o_rep2.department +
 						' Location: '+rep2_location +
@@ -850,14 +832,7 @@ define(['N/record', 'N/task', 'N/log', 'N/format', 'N/search', 'N/runtime'], fun
 				o_je.commitLine('line');
 				
 				if(hasRep3){
-
-					if(isNegative(a_LineObj[i].amount)){
-						var rep3_amount = to2DecNegative(a_LineObj[i].amount * d_rep3Cont);
-					}
-					else{
-						var rep3_amount = to2Decimal(a_LineObj[i].amount * d_rep3Cont);
-					}
-					
+					var rep3_amount = to2Decimal(a_LineObj[i].amount * d_rep3Cont);
 					log.debug('Rep 3 Info', 'Department: ' + o_rep3.department +
 							' Location: '+rep3_location +
 							' Contribution: '+ o_rep3.contribution+
@@ -959,9 +934,6 @@ define(['N/record', 'N/task', 'N/log', 'N/format', 'N/search', 'N/runtime'], fun
 	function to2Decimal(number){
 			return +((number).toFixed(2));
 	}
-	function to2DecNegative(number){
-		return (number.toFixed(2));
-	}
 	
 
 	/**
@@ -1009,18 +981,6 @@ define(['N/record', 'N/task', 'N/log', 'N/format', 'N/search', 'N/runtime'], fun
 	 */
 	function isNotNull(field_val){
 		return (field_val != '' && field_val != null);
-	}
-
-	/**
-	* Determines if a number is negative
-	*/
-	function isNegative(num){
-		if(num < 0){
-			return true;
-		}
-		else{
-			return false;
-		}
 	}
 	/**
 	 * 
